@@ -30,15 +30,15 @@ def read_input(path):
 
 
 def read_gt(path):
-    x = np.array(Image.open(path))/255.
-    return x[..., np.newaxis]
+    x = np.array(Image.open(path))
+    return x[..., np.newaxis]/np.max(x)
 
 if __name__ == '__main__':
     model_name = "baseline_unet_aug_vgg_do_0.1_activation_ReLU_"
 
 
     val_data = list(zip(sorted(glob('../input/DRIVE/test/images/*.tif')),
-                          sorted(glob('../input/DRIVE/test/1st_manual/*.gif'))))
+                          sorted(glob('../input/DRIVE/test/2nd_manual/*.gif'))))
 
     try:
         os.makedirs("../output/"+model_name+"test/", exist_ok=True)

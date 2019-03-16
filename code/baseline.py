@@ -150,10 +150,6 @@ if __name__ == '__main__':
 
     train_data = list(zip(sorted(glob('../input/DRIVE/training/images/*.tif')),
                           sorted(glob('../input/DRIVE/training/1st_manual/*.gif'))))
-    val_data = list(zip(sorted(glob('../input/DRIVE/test/images/*.tif')),
-                          sorted(glob('../input/DRIVE/test/1st_manual/*.gif'))))
-
-    print(len(val_data)//batch_size, len(val_data), batch_size)
 
     model = get_unet(do=args['dropout'], activation=activation)
 
@@ -164,15 +160,13 @@ if __name__ == '__main__':
         pass
 
 
-    redonplat = ReduceLROnPlateau(monitor="val_loss", mode="min", patience=20, verbose=1)
-    callbacks_list = [redonplat]  # early
 
-    history = model.fit_generator(gen(train_data, au=True), validation_data=gen(val_data), epochs=100, verbose=2,
-                         callbacks=callbacks_list, steps_per_epoch= 100*len(train_data)//batch_size,
-                                  validation_steps=100*len(val_data)//batch_size, use_multiprocessing=True, workers=16)
+
+    history = model.fit_generator(gen(train_data, au=True), epochs=100, verbose=2,
+                         steps_per_epoch= 100*len(train_data)//batch_size,
+                                  use_multiprocessing=True, workers=16)
 
     model.save_weights(file_path)
-
 
 
 

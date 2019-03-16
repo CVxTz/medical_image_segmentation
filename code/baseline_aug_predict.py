@@ -29,15 +29,15 @@ def read_input(path):
 
 
 def read_gt(path):
-    x = np.array(Image.open(path))/255.
-    return x[..., np.newaxis]
+    x = np.array(Image.open(path))
+    return x[..., np.newaxis]/np.max(x)
 
 if __name__ == '__main__':
     model_name = "baseline_unet_aug_do_0.1_activation_ReLU_"
 
 
     val_data = list(zip(sorted(glob('../input/DRIVE/test/images/*.tif')),
-                          sorted(glob('../input/DRIVE/test/1st_manual/*.gif'))))
+                          sorted(glob('../input/DRIVE/test/2nd_manual/*.gif'))))
 
     try:
         os.makedirs("../output/"+model_name+"test/", exist_ok=True)
@@ -71,12 +71,11 @@ if __name__ == '__main__':
             pred_ = pred[i, :, :, 0]
             pred_ = resize(pred_, (584, 565))
 
-            gt_list += masks[i].ravel().tolist()
+            gt_list += (masks[i].ravel()>0.5).astype(int).tolist()
             pred_list += pred_.ravel().tolist()
 
             pred_ = 255.*(pred_ - np.min(pred_))/(np.max(pred_)-np.min(pred_))
 
-            print(np.max(pred_), np.min(pred_))
             image_base = image_path[0].split("/")[-1]
 
             cv2.imwrite("../output/"+model_name+"test/"+image_base, pred_)
