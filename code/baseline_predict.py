@@ -1,4 +1,4 @@
-from baseline_aug import get_unet
+from baseline import get_unet
 from glob import glob
 from PIL import Image
 from skimage.transform import resize
@@ -33,7 +33,7 @@ def read_gt(path):
     return x[..., np.newaxis]
 
 if __name__ == '__main__':
-    model_name = "baseline_unet_aug_do_0.1_activation_ReLU_"
+    model_name = "baseline_unet_do_0.1_activation_ReLU_"
 
 
     val_data = list(zip(sorted(glob('../input/DRIVE/test/images/*.tif')),

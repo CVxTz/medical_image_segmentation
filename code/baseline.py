@@ -36,47 +36,27 @@ smooth = 1.
 
 
 
-VGG_PATH = "/home/jenazzad/.keras/models/vgg16_weights_tf_dim_ordering_tf_kernels_notop.h5"
 def get_unet(do=0, activation=ReLU):
     inputs = Input((None, None, 3))
-    x = Conv2D(64, (3, 3), activation='relu', padding='same', name='block1_conv1')(inputs)
-    x = Conv2D(64, (3, 3), activation='relu', padding='same', name='block1_conv2')(x)
-    conv1 = x
-    x = MaxPooling2D((2, 2), strides=(2, 2), name='block1_pool')(x)
-    x = Dropout(do)(x)
+    conv1 = Dropout(do)(activation()(Conv2D(32, (3, 3), padding='same')(inputs)))
+    conv1 = Dropout(do)(activation()(Conv2D(32, (3, 3), padding='same')(conv1)))
+    pool1 = MaxPooling2D(pool_size=(2, 2))(conv1)
 
-    # Block 2
-    x = Conv2D(128, (3, 3), activation='relu', padding='same', name='block2_conv1')(x)
-    x = Conv2D(128, (3, 3), activation='relu', padding='same', name='block2_conv2')(x)
-    conv2 = x
-    x = MaxPooling2D((2, 2), strides=(2, 2), name='block2_pool')(x)
-    x = Dropout(do)(x)
+    conv2 = Dropout(do)(activation()(Conv2D(64, (3, 3), padding='same')(pool1)))
+    conv2 = Dropout(do)(activation()(Conv2D(64, (3, 3), padding='same')(conv2)))
+    pool2 = MaxPooling2D(pool_size=(2, 2))(conv2)
 
-    # Block 3
-    x = Conv2D(256, (3, 3), activation='relu', padding='same', name='block3_conv1')(x)
-    x = Conv2D(256, (3, 3), activation='relu', padding='same', name='block3_conv2')(x)
-    x = Conv2D(256, (3, 3), activation='relu', padding='same', name='block3_conv3')(x)
-    conv3 = x
-    x = MaxPooling2D((2, 2), strides=(2, 2), name='block3_pool')(x)
-    x = Dropout(do)(x)
+    conv3 = Dropout(do)(activation()(Conv2D(128, (3, 3), padding='same')(pool2)))
+    conv3 = Dropout(do)(activation()(Conv2D(128, (3, 3), padding='same')(conv3)))
+    pool3 = MaxPooling2D(pool_size=(2, 2))(conv3)
 
-    # Block 4
-    x = Conv2D(512, (3, 3), activation='relu', padding='same', name='block4_conv1')(x)
-    x = Conv2D(512, (3, 3), activation='relu', padding='same', name='block4_conv2')(x)
-    x = Conv2D(512, (3, 3), activation='relu', padding='same', name='block4_conv3')(x)
-    conv4 = x
-    x = MaxPooling2D((2, 2), strides=(2, 2), name='block4_pool')(x)
-    x = Dropout(do)(x)
+    conv4 = Dropout(do)(activation()(Conv2D(256, (3, 3), padding='same')(pool3)))
+    conv4 = Dropout(do)(activation()(Conv2D(256, (3, 3), padding='same')(conv4)))
+    pool4 = MaxPooling2D(pool_size=(2, 2))(conv4)
 
-    # Block 5
-    x = Conv2D(512, (3, 3), activation='relu', padding='same', name='block5_conv1')(x)
-    x = Conv2D(512, (3, 3), activation='relu', padding='same', name='block5_conv2')(x)
-    x = Conv2D(512, (3, 3), activation='relu', padding='same', name='block5_conv3')(x)
-    conv5 = x
-    x = Dropout(do)(x)
+    conv5 = Dropout(do)(activation()(Conv2D(512, (3, 3), padding='same')(pool4)))
+    conv5 = Dropout(do)(activation()(Conv2D(512, (3, 3), padding='same')(conv5)))
 
-    vgg = Model(inputs, x)
-    vgg.load_weights(VGG_PATH, by_name=True)
     up6 = concatenate([Conv2DTranspose(256, (2, 2), strides=(2, 2), padding='same')(conv5), conv4], axis=3)
     conv6 = Dropout(do)(activation()(Conv2D(256, (3, 3), padding='same')(up6)))
     conv6 = Dropout(do)(activation()(Conv2D(256, (3, 3), padding='same')(conv6)))
@@ -101,6 +81,7 @@ def get_unet(do=0, activation=ReLU):
 
 
     return model
+
 
 def read_input(path):
     x = np.array(Image.open(path))/255.
@@ -163,7 +144,7 @@ if __name__ == '__main__':
 
     activation = globals()[args['activation']]
 
-    model_name = "baseline_unet_aug_vgg_do_%s_activation_%s_"%(args['dropout'], args['activation'])
+    model_name = "baseline_unet_do_%s_activation_%s_"%(args['dropout'], args['activation'])
 
     print("Model : %s"%model_name)
 

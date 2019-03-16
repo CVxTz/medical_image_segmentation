@@ -164,14 +164,14 @@ if __name__ == '__main__':
         pass
 
 
-    checkpoint = ModelCheckpoint(file_path, monitor='val_loss', verbose=1, save_best_only=True, mode='min')
-    early = EarlyStopping(monitor="val_loss", mode="min", patience=50, verbose=1)
     redonplat = ReduceLROnPlateau(monitor="val_loss", mode="min", patience=20, verbose=1)
-    callbacks_list = [checkpoint, early, redonplat]  # early
+    callbacks_list = [redonplat]  # early
 
-    history = model.fit_generator(gen(train_data, au=True), validation_data=gen(val_data), epochs=1000, verbose=2,
+    history = model.fit_generator(gen(train_data, au=True), validation_data=gen(val_data), epochs=100, verbose=2,
                          callbacks=callbacks_list, steps_per_epoch= 100*len(train_data)//batch_size,
                                   validation_steps=100*len(val_data)//batch_size, use_multiprocessing=True, workers=16)
+
+    model.save_weights(file_path)
 
 
 

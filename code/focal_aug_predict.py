@@ -1,5 +1,6 @@
-from baseline_aug import get_unet
-from glob import glob
+from focal_aug import get_unet
+import glob
+from cv2 import imread
 from PIL import Image
 from skimage.transform import resize
 import numpy as np
@@ -10,35 +11,23 @@ from tqdm import tqdm
 import os
 import cv2
 from keras.layers import ReLU
-from sklearn.metrics import roc_auc_score
-
 
 batchsize = 4
-input_shape = (576, 576)
-
+input_shape = (512, 512)
 
 def batch(iterable, n=batchsize):
     l = len(iterable)
     for ndx in range(0, l, n):
         yield iterable[ndx:min(ndx + n, l)]
 
-
 def read_input(path):
     x = np.array(Image.open(path))/255.
     return x
 
-
-def read_gt(path):
-    x = np.array(Image.open(path))/255.
-    return x[..., np.newaxis]
-
 if __name__ == '__main__':
-    model_name = "baseline_unet_aug_do_0.1_activation_ReLU_"
+    model_name = "focal_unet_aug_do_0.1_activation_ReLU_"
 
-
-    val_data = list(zip(sorted(glob('../input/DRIVE/test/images/*.tif')),
-                          sorted(glob('../input/DRIVE/test/1st_manual/*.gif'))))
-
+    test_files = glob.glob("../input/DRIVE/test/images/*.tif")
     try:
         os.makedirs("../output/"+model_name+"test/", exist_ok=True)
     except:
@@ -50,15 +39,12 @@ if __name__ == '__main__':
 
     model.load_weights(file_path, by_name=True)
 
-    gt_list = []
-    pred_list = []
+    for batch_files in tqdm(batch(test_files), total=len(test_files)//batchsize):
 
-    for batch_files in tqdm(batch(val_data), total=len(val_data)//batchsize):
-
-        imgs = [resize(read_input(image_path[0]), input_shape) for image_path in batch_files]
-        masks = [read_gt(image_path[1]) for image_path in batch_files]
+        imgs = [resize(read_input(image_path), input_shape) for image_path in batch_files]
 
         imgs = np.array(imgs)
+
 
         pred = model.predict(imgs)
 
@@ -71,15 +57,14 @@ if __name__ == '__main__':
             pred_ = pred[i, :, :, 0]
             pred_ = resize(pred_, (584, 565))
 
-            gt_list += masks[i].ravel().tolist()
-            pred_list += pred_.ravel().tolist()
-
             pred_ = 255.*(pred_ - np.min(pred_))/(np.max(pred_)-np.min(pred_))
 
             print(np.max(pred_), np.min(pred_))
-            image_base = image_path[0].split("/")[-1]
+            image_base = image_path.split("/")[-1]
 
             cv2.imwrite("../output/"+model_name+"test/"+image_base, pred_)
 
-    print(len(gt_list), len(pred_list))
-    print("AUC ROC : ", roc_auc_score(gt_list, pred_list))
+
+
+
+
