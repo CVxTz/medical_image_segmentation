@@ -37,7 +37,8 @@ if __name__ == '__main__':
 
 
     val_data = list(zip(sorted(glob('../input/DRIVE/test/images/*.tif')),
-                          sorted(glob('../input/DRIVE/test/2nd_manual/*.gif'))))
+                          sorted(glob('../input/DRIVE/test/2nd_manual/*.gif')),
+                        sorted(glob('../input/DRIVE/test/mask/*.gif'))))
 
     try:
         os.makedirs("../output/"+model_name+"test/", exist_ok=True)
@@ -56,7 +57,8 @@ if __name__ == '__main__':
     for batch_files in tqdm(batch(val_data), total=len(val_data)//batchsize):
 
         imgs = [resize(read_input(image_path[0]), input_shape) for image_path in batch_files]
-        masks = [read_gt(image_path[1]) for image_path in batch_files]
+        seg = [read_gt(image_path[1]) for image_path in batch_files]
+        mask = [read_gt(image_path[2]) for image_path in batch_files]
 
         imgs = np.array(imgs)
 
@@ -69,14 +71,29 @@ if __name__ == '__main__':
         for i, image_path in enumerate(batch_files):
 
             pred_ = pred[i, :, :, 0]
+
             pred_ = resize(pred_, (584, 565))
 
-            gt_list += masks[i].ravel().tolist()
-            pred_list += pred_.ravel().tolist()
+            mask_ = mask[i]
+
+            gt_ = (seg[i]>0.5).astype(int)
+
+            gt_flat = []
+            pred_flat = []
+
+            for p in range(pred_.shape[0]):
+                for q in range(pred_.shape[1]):
+                    if mask_[p,q]>0.5: # Inside the mask pixels only
+                        gt_flat.append(gt_[p,q])
+                        pred_flat.append(pred_[p,q])
+
+            print(pred_.size, len(gt_list))
+
+            gt_list += gt_flat
+            pred_list += pred_flat
 
             pred_ = 255.*(pred_ - np.min(pred_))/(np.max(pred_)-np.min(pred_))
 
-            print(np.max(pred_), np.min(pred_))
             image_base = image_path[0].split("/")[-1]
 
             cv2.imwrite("../output/"+model_name+"test/"+image_base, pred_)

@@ -116,14 +116,12 @@ def random_crop(img, mask, u=0.1):
 
 
 def random_augmentation(img, mask):
-    img = random_channel_shift(img, limit=0.1)
-    img = random_brightness(img, limit=(-0.1, 0.1), u=0.1)
-    img = random_contrast(img, limit=(-0.1, 0.1), u=0.1)
-    img = random_saturation(img, limit=(-0.1, 0.1), u=0.1)
-    img = random_gray(img, u=0.1)
-    img, mask = random_rotate(img, mask, rotate_limit=(-90, 90), u=0.1)
-    img, mask = random_shear(img, mask, intensity_range=(-10, 10), u=0.1)
+    img = random_brightness(img, limit=(-0.1, 0.1), u=0.05)
+    img = random_contrast(img, limit=(-0.1, 0.1), u=0.05)
+    img = random_saturation(img, limit=(-0.1, 0.1), u=0.05)
+    img, mask = random_rotate(img, mask, rotate_limit=(-10, 10), u=0.05)
+    img, mask = random_shear(img, mask, intensity_range=(-5, 5), u=0.05)
     img, mask = random_flip(img, mask, u=0.5)
-    img, mask = random_shift(img, mask, w_limit=(-0.1, 0.1), h_limit=(-0.1, 0.1), u=0.1)
-    img, mask = random_zoom(img, mask, zoom_range=(0.9, 1.1), u=0.1)
+    img, mask = random_shift(img, mask, w_limit=(-0.1, 0.1), h_limit=(-0.1, 0.1), u=0.05)
+    img, mask = random_zoom(img, mask, zoom_range=(0.9, 1.1), u=0.05)
     return img, mask

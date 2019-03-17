@@ -124,31 +124,31 @@ def random_crop(img, mask, crop_size=input_shape[0]):
 def gen(data, au=False):
     while True:
         repeat = 4
-        index= random.choice(list(range(len(data))), batch_size//repeat)
+        index = random.choice(list(range(len(data))), batch_size // repeat)
         index = list(map(int, index))
         list_images_base = [read_input(data[i][0]) for i in index]
         list_gt_base = [read_gt(data[i][1]) for i in index]
 
-        list_images = []
-        list_gt = []
-
-        for image, gt in zip(list_images_base, list_gt_base):
-
-            for _ in range(repeat):
-                image_, gt_ = random_crop(image.copy(), gt.copy())
-                list_images.append(image_)
-                list_gt.append(gt_)
-
         list_images_aug = []
         list_gt_aug = []
 
-        for image, gt in zip(list_images, list_gt):
+        for image, gt in zip(list_images_base, list_gt_base):
             if au:
                 image, gt = random_augmentation(image, gt)
             list_images_aug.append(image)
             list_gt_aug.append(gt)
 
-        yield np.array(list_images_aug), np.array(list_gt_aug)
+        list_images = []
+        list_gt = []
+
+        for image, gt in zip(list_images_aug, list_gt_aug):
+
+            for _ in range(repeat):
+                image_, gt_ = random_crop(image, gt)
+                list_images.append(image_)
+                list_gt.append(gt_)
+
+        yield np.array(list_images), np.array(list_gt)
 
 
 if __name__ == '__main__':
