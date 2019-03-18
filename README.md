@@ -48,6 +48,7 @@ widely used for semantic segmentation tasks especially in the medical domain.
 ### Model :
 
 ![](https://cdn-images-1.medium.com/max/1600/1*jqoAmEyQmxKpGcAkbPGNMQ.png)
+
 <span class="figcaption_hack">U-net</span>
 
 The U-net Architecture is an encoder-decoder with some skip connections between
@@ -90,11 +91,13 @@ The performance is close for the three variations but it seems pretraining does
 not help in this case while data augmentation does a little bit.
 
 ![](https://cdn-images-1.medium.com/max/2600/1*cwkutNmvGr7G3-KPNDSGcg.png)
+
 <span class="figcaption_hack">Best model predictions</span>
 
 The predictions in the figure above look pretty cool ! 😄
 
 ![](https://cdn-images-1.medium.com/max/1600/1*p7i0beLshYjgxXLKvXdfLw.jpeg)
+
 <span class="figcaption_hack">Predictions on top of ground Truth</span>
 
 We also plot the differences between the predictions and the ground truth :
@@ -115,5 +118,3 @@ images and still obtain a nice performance and pretty cool results.
 Code to reproduce the results is available here :
 [https://github.com/CVxTz/medical_image_segmentation](https://github.com/CVxTz/medical_image_segmentation)
 
-Don’t hesitate to clap if you liked the post and comment if you have any
-suggestion 😸
