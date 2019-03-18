@@ -1,6 +1,10 @@
 # medical_image_segmentation
 Medical image segmentation
 
+### Data 
+Available at https://www.isi.uu.nl/Research/Databases/DRIVE/
+
+Unzip in ./input
 
 # Vessel Segmentation With Python and Keras
 
