@@ -8,20 +8,24 @@ Unzip in ./input
 
 # Vessel Segmentation With Python and Keras
 
+![](https://cdn-images-1.medium.com/max/2600/1*ARG_VyRl8ZODP7D0dxhCeQ.jpeg)
+<span class="figcaption_hack">Photo by [Erica
+Leong](https://unsplash.com/photos/_FoHMYYlatI?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText)
+on
+[Unsplash](https://unsplash.com/search/photos/eyes?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText)</span>
 
 ### Motivation :
 
 Automatic segmentation of medical images is an important step to extract useful
 information that can help doctors make a diagnosis. For example, it can be used
 to segment retinal vessels so that we can represent their structure and measure
-their  width which in turn  can help diagnose retinal diseases.
+their width which in turn can help diagnose retinal diseases.
 
 In this post we will implement a Neural baseline that does image segmentation
 applied to retinal vessel images.
 
 ### Dataset :
 
-![](https://cdn-images-1.medium.com/max/2400/1*xqk-tXMd_ucnobOWTY-EzQ.png)
 <span class="figcaption_hack">[http://www.isi.uu.nl/Research/Databases/DRIVE/browser.php](http://www.isi.uu.nl/Research/Databases/DRIVE/browser.php)</span>
 
 We use [DRIVE (Digital Retinal Images for Vessel
@@ -33,11 +37,9 @@ vessel at each pixel (i, j) of the image.
 
 ### Problem Setting :
 
-<br> 
-
 **Problem** : We want to assign to each a pixel a “1” label if it is part of a
 blood vessel in the image and “0” otherwise.<br> **Intuition**/**Hypothesis** :
-The neighboring pixels values are  important to make a prediction for each pixel
+The neighboring pixels values are important to make a prediction for each pixel
 (i, j) so we should take into account context. The predictions do not depend on
 the specific position on the image so the classifier should have some
 translation invariance.<br> **Solution** : Use CNNs ! We will use the
@@ -47,8 +49,6 @@ widely used for semantic segmentation tasks especially in the medical domain.
 
 ### Model :
 
-![](https://cdn-images-1.medium.com/max/1600/1*jqoAmEyQmxKpGcAkbPGNMQ.png)
-
 <span class="figcaption_hack">U-net</span>
 
 The U-net Architecture is an encoder-decoder with some skip connections between
@@ -56,8 +56,6 @@ the encoder and the decoder. The major advantage of this architecture is its
 ability to take into account a wider context when making a prediction for a
 pixel. This is thanks to the large number of channels used in the up-sampling
 operation.
-
-<br> 
 
 #### **Input image processing :**
 
@@ -83,20 +81,16 @@ edges around the circle of the image won’t count).
 
 #### Results :
 
-* Pre-trained encoder +  data augmentation AUC ROC : **0.9820**
-* Trained from scratch + data augmentation    AUC ROC : 0.9806
-* Trained from scratch without augmentation AUC ROC : *0.9811*
+* Trained from scratch + data augmentation AUC ROC : **0.9820**
+* Trained from scratch without augmentation AUC ROC : 0.9806
+* Pre-trained encoder + data augmentation AUC ROC : *0.9811*
 
 The performance is close for the three variations but it seems pretraining does
 not help in this case while data augmentation does a little bit.
 
-![](https://cdn-images-1.medium.com/max/2600/1*cwkutNmvGr7G3-KPNDSGcg.png)
-
 <span class="figcaption_hack">Best model predictions</span>
 
 The predictions in the figure above look pretty cool ! 😄
-
-![](https://cdn-images-1.medium.com/max/1600/1*p7i0beLshYjgxXLKvXdfLw.jpeg)
 
 <span class="figcaption_hack">Predictions on top of ground Truth</span>
 
@@ -117,4 +111,6 @@ images and still obtain a nice performance and pretty cool results.
 
 Code to reproduce the results is available here :
 [https://github.com/CVxTz/medical_image_segmentation](https://github.com/CVxTz/medical_image_segmentation)
+
+
 
