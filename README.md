@@ -8,7 +8,6 @@ Unzip in ./input
 
 # Vessel Segmentation With Python and Keras
 
-![](https://cdn-images-1.medium.com/max/2600/1*ARG_VyRl8ZODP7D0dxhCeQ.jpeg)
 <span class="figcaption_hack">Photo by [Erica
 Leong](https://unsplash.com/photos/_FoHMYYlatI?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText)
 on
@@ -111,6 +110,4 @@ images and still obtain a nice performance and pretty cool results.
 
 Code to reproduce the results is available here :
 [https://github.com/CVxTz/medical_image_segmentation](https://github.com/CVxTz/medical_image_segmentation)
-
-
 
