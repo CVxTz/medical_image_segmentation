@@ -1,6 +1,6 @@
 # medical_image_segmentation
 Medical image segmentation
-
+Code for : https://towardsdatascience.com/vessel-segmentation-with-python-and-keras-722f9fb71b21
 ### Data 
 Available at https://www.isi.uu.nl/Research/Databases/DRIVE/
 
@@ -8,10 +8,6 @@ Unzip in ./input
 
 # Vessel Segmentation With Python and Keras
 
-<span class="figcaption_hack">Photo by [Erica
-Leong](https://unsplash.com/photos/_FoHMYYlatI?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText)
-on
-[Unsplash](https://unsplash.com/search/photos/eyes?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText)</span>
 
 ### Motivation :
 
@@ -24,6 +20,8 @@ In this post we will implement a Neural baseline that does image segmentation
 applied to retinal vessel images.
 
 ### Dataset :
+
+![](https://cdn-images-1.medium.com/max/1200/1*xqk-tXMd_ucnobOWTY-EzQ.png)
 
 <span class="figcaption_hack">[http://www.isi.uu.nl/Research/Databases/DRIVE/browser.php](http://www.isi.uu.nl/Research/Databases/DRIVE/browser.php)</span>
 
@@ -47,6 +45,8 @@ architecture to do blood vessel segmentation. It is an architecture that is
 widely used for semantic segmentation tasks especially in the medical domain.
 
 ### Model :
+
+![](https://cdn-images-1.medium.com/max/800/1*jqoAmEyQmxKpGcAkbPGNMQ.png)
 
 <span class="figcaption_hack">U-net</span>
 
@@ -87,9 +87,13 @@ edges around the circle of the image won’t count).
 The performance is close for the three variations but it seems pretraining does
 not help in this case while data augmentation does a little bit.
 
+![](https://cdn-images-1.medium.com/max/2560/1*cwkutNmvGr7G3-KPNDSGcg.png)
+
 <span class="figcaption_hack">Best model predictions</span>
 
 The predictions in the figure above look pretty cool ! 😄
+
+![](https://cdn-images-1.medium.com/max/800/1*p7i0beLshYjgxXLKvXdfLw.jpeg)
 
 <span class="figcaption_hack">Predictions on top of ground Truth</span>
 
